@@ -9,7 +9,7 @@ export class PostResolver {
   constructor(private readonly postService: PostService) {}
 
   // token
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Query(() => [Post], { name: 'posts' })
   findAll(@Context() context: { req: { user: { id: number } } }) {
     const user = context.req.user;
