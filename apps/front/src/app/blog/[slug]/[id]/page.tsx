@@ -1,6 +1,7 @@
 import { fetchPostById } from '@/lib/actions/postAction';
 import Image from 'next/image';
 import SanitizedContent from '@/app/blog/[slug]/[id]/_components/SanitizedContent';
+import Comments from '@/app/blog/[slug]/[id]/_components/Comments';
 
 type Props = {
   params: {
@@ -11,8 +12,6 @@ type Props = {
 const Page = async ({ params }: Props) => {
   const postId = (await params).id;
   const post = await fetchPostById(+postId);
-
-  console.log(post);
 
   return (
     <main className='container mx-auto px-4 py-8 mt-16'>
@@ -31,6 +30,7 @@ const Page = async ({ params }: Props) => {
       </div>
 
       <SanitizedContent content={post.content} />
+      <Comments postId={post.id} />
     </main>
   );
 };
