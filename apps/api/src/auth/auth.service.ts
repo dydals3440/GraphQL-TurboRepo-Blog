@@ -5,6 +5,7 @@ import { verify } from 'argon2';
 import { SignInInput } from 'src/auth/dto/signin.input.dto';
 import { AuthJwtPayload } from 'src/auth/types/auth-jwtPayload';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateUserInput } from 'src/user/dto/create-user.input';
 
 @Injectable()
 export class AuthService {
@@ -61,5 +62,26 @@ export class AuthService {
     const currentUser = { id: user.id };
 
     return currentUser;
+  }
+
+  async validateGoogleUser(googleUser: CreateUserInput) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email: googleUser.email,
+      },
+    });
+
+    if (user) {
+      const { password, ...authUser } = user;
+
+      return authUser;
+    }
+
+    const dbUser = await this.prisma.user.create({
+      data: {
+        ...googleUser,
+      },
+    });
+    const { password, ...authUser } = dbUser;
   }
 }
